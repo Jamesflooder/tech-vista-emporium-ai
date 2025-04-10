@@ -9,6 +9,13 @@ export interface AIResponse {
 
 export const askAI = async (prompt: string): Promise<AIResponse> => {
   try {
+    // Ajouter des instructions pour limiter les réponses aux questions sur le site
+    const enhancedPrompt = `Tu es l'assistant IA de TechVista, une boutique d'électronique vendant des smartphones, ordinateurs, tablettes et accessoires. 
+    Tu dois UNIQUEMENT répondre aux questions concernant les produits, les services ou le fonctionnement du site e-commerce TechVista. 
+    Si la question ne concerne pas le site ou les produits vendus, réponds poliment que tu ne peux répondre qu'aux questions relatives au site TechVista et ses produits.
+    
+    Question de l'utilisateur: ${prompt}`;
+    
     const response = await fetch(`${API_URL}?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
@@ -16,7 +23,7 @@ export const askAI = async (prompt: string): Promise<AIResponse> => {
       },
       body: JSON.stringify({
         contents: [{
-          parts: [{ text: prompt }]
+          parts: [{ text: enhancedPrompt }]
         }]
       })
     });
@@ -43,6 +50,13 @@ export const askAI = async (prompt: string): Promise<AIResponse> => {
 
 export const analyzeImage = async (imageUrl: string, prompt: string): Promise<AIResponse> => {
   try {
+    // Ajouter des instructions pour limiter les réponses aux produits électroniques
+    const enhancedPrompt = `Tu es l'assistant IA de TechVista, une boutique d'électronique vendant des smartphones, ordinateurs, tablettes et accessoires.
+    Analyse cette image et donne des informations uniquement si elle montre un produit électronique ou un accessoire. 
+    Si l'image ne montre pas un produit électronique ou un accessoire, indique poliment que tu ne peux analyser que les produits liés au site TechVista.
+    
+    ${prompt}`;
+    
     const response = await fetch(`${API_URL}?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
@@ -51,7 +65,7 @@ export const analyzeImage = async (imageUrl: string, prompt: string): Promise<AI
       body: JSON.stringify({
         contents: [{
           parts: [
-            { text: prompt },
+            { text: enhancedPrompt },
             { 
               inline_data: {
                 mime_type: "image/jpeg",

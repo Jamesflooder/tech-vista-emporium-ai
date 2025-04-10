@@ -38,3 +38,6 @@ export interface Order {
   paymentMethod: string;
   createdAt: string;
 }
+
+export type ThemeType = 'light' | 'dark' | 'auto';
+export type LanguageType = 'fr' | 'en';

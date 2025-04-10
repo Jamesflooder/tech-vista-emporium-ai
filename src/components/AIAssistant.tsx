@@ -7,12 +7,44 @@ import { Textarea } from '@/components/ui/textarea';
 import { Send, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
+import { useAuth } from '@/context/AuthContext';
+
+// Translations for the AI assistant
+const translations = {
+  fr: {
+    title: "Assistant IA TechVista",
+    subtitle: "Posez des questions sur nos produits ou analysez des images",
+    welcomeMessage: "Bonjour ! Je suis l'assistant IA de TechVista. Je peux vous aider à choisir le meilleur produit électronique pour vos besoins, répondre à vos questions techniques, ou analyser une image de produit. Comment puis-je vous aider aujourd'hui ?",
+    thinking: "L'assistant réfléchit...",
+    imageReady: "Image prête à être analysée",
+    removeImage: "Retirer",
+    inputPlaceholder: "Posez une question ou décrivez votre besoin...",
+    imageSent: "Image chargée avec succès.",
+    sendError: "Désolé, une erreur s'est produite. Veuillez réessayer.",
+    processingError: "Désolé, je n'ai pas pu traiter votre demande. Veuillez réessayer."
+  },
+  en: {
+    title: "TechVista AI Assistant",
+    subtitle: "Ask questions about our products or analyze images",
+    welcomeMessage: "Hello! I'm the TechVista AI assistant. I can help you choose the best electronic product for your needs, answer your technical questions, or analyze a product image. How can I assist you today?",
+    thinking: "Assistant is thinking...",
+    imageReady: "Image ready for analysis",
+    removeImage: "Remove",
+    inputPlaceholder: "Ask a question or describe your need...",
+    imageSent: "Image successfully uploaded.",
+    sendError: "Sorry, an error occurred. Please try again.",
+    processingError: "Sorry, I couldn't process your request. Please try again."
+  }
+};
 
 const AIAssistant = () => {
+  const { language } = useAuth();
+  const t = translations[language];
+  
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string; image?: string }[]>([
     { 
       role: 'assistant', 
-      content: "Bonjour ! Je suis l'assistant IA de TechVista. Je peux vous aider à choisir le meilleur produit électronique pour vos besoins, répondre à vos questions techniques, ou analyser une image de produit. Comment puis-je vous aider aujourd'hui ?" 
+      content: t.welcomeMessage
     }
   ]);
   const [input, setInput] = useState('');
@@ -20,6 +52,13 @@ const AIAssistant = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Update welcome message when language changes
+  useEffect(() => {
+    if (messages.length === 1 && messages[0].role === 'assistant') {
+      setMessages([{ role: 'assistant', content: t.welcomeMessage }]);
+    }
+  }, [language, t.welcomeMessage]);
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -56,12 +95,12 @@ const AIAssistant = () => {
       ]);
     } catch (error) {
       console.error('Error:', error);
-      toast.error("Désolé, une erreur s'est produite. Veuillez réessayer.");
+      toast.error(t.sendError);
       setMessages((prev) => [
         ...prev,
         { 
           role: 'assistant', 
-          content: "Désolé, je n'ai pas pu traiter votre demande. Veuillez réessayer." 
+          content: t.processingError
         }
       ]);
     } finally {
@@ -77,7 +116,7 @@ const AIAssistant = () => {
       reader.onload = (event) => {
         if (event.target?.result) {
           setSelectedImage(event.target.result as string);
-          toast.success("Image chargée avec succès.");
+          toast.success(t.imageSent);
         }
       };
       
@@ -97,8 +136,8 @@ const AIAssistant = () => {
   return (
     <div className="flex flex-col h-[calc(100vh-10rem)] max-w-4xl mx-auto bg-white dark:bg-techVista-black rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
       <div className="bg-techVista-green p-4 text-white">
-        <h2 className="text-xl font-bold">Assistant IA TechVista</h2>
-        <p className="text-sm opacity-80">Posez des questions sur nos produits ou analysez des images</p>
+        <h2 className="text-xl font-bold">{t.title}</h2>
+        <p className="text-sm opacity-80">{t.subtitle}</p>
       </div>
       
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -133,7 +172,7 @@ const AIAssistant = () => {
           <div className="flex justify-start">
             <div className="bg-secondary text-secondary-foreground max-w-[80%] p-3 rounded-lg flex items-center">
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              <p>L'assistant réfléchit...</p>
+              <p>{t.thinking}</p>
             </div>
           </div>
         )}
@@ -149,13 +188,13 @@ const AIAssistant = () => {
             alt="Selected" 
             className="h-10 w-10 object-cover rounded"
           />
-          <p className="text-sm flex-1 truncate">Image prête à être analysée</p>
+          <p className="text-sm flex-1 truncate">{t.imageReady}</p>
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={() => setSelectedImage(null)}
           >
-            Retirer
+            {t.removeImage}
           </Button>
         </div>
       )}
@@ -181,7 +220,7 @@ const AIAssistant = () => {
         <Textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Posez une question ou décrivez votre besoin..."
+          placeholder={t.inputPlaceholder}
           className="flex-1 resize-none"
           rows={1}
           disabled={isLoading}

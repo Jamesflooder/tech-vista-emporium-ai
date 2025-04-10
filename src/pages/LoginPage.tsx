@@ -12,10 +12,56 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 
+const translations = {
+  fr: {
+    login: "Connexion",
+    register: "Inscription",
+    loginTitle: "Connexion",
+    loginDescription: "Connectez-vous à votre compte TechVista",
+    registerTitle: "Inscription",
+    registerDescription: "Créez un compte pour commencer à faire vos achats",
+    email: "Email",
+    password: "Mot de passe",
+    forgotPassword: "Mot de passe oublié?",
+    fullName: "Nom complet",
+    confirmPassword: "Confirmer le mot de passe",
+    loginButton: "Se connecter",
+    registerButton: "S'inscrire",
+    loggingIn: "Connexion en cours...",
+    registering: "Inscription en cours...",
+    adminTestTitle: "Pour tester en tant qu'administrateur:",
+    adminTestEmail: "Email: admin@techvista.com",
+    adminTestPassword: "Mot de passe: admin123",
+    orUseAdmin: "Ou utilisez admin / motherboard",
+  },
+  en: {
+    login: "Login",
+    register: "Register",
+    loginTitle: "Login",
+    loginDescription: "Sign in to your TechVista account",
+    registerTitle: "Register",
+    registerDescription: "Create an account to start shopping",
+    email: "Email",
+    password: "Password",
+    forgotPassword: "Forgot password?",
+    fullName: "Full name",
+    confirmPassword: "Confirm password",
+    loginButton: "Login",
+    registerButton: "Register",
+    loggingIn: "Logging in...",
+    registering: "Registering...",
+    adminTestTitle: "To test as administrator:",
+    adminTestEmail: "Email: admin@techvista.com",
+    adminTestPassword: "Password: admin123",
+    orUseAdmin: "Or use admin / motherboard",
+  }
+};
+
 const LoginPage = () => {
-  const { login, register, user } = useAuth();
+  const { login, register: registerUser, user, language } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const t = translations[language];
   
   const [loginData, setLoginData] = useState({
     email: '',
@@ -59,7 +105,7 @@ const LoginPage = () => {
     e.preventDefault();
     
     if (!loginData.email || !loginData.password) {
-      toast.error("Veuillez remplir tous les champs");
+      toast.error(language === "fr" ? "Veuillez remplir tous les champs" : "Please fill in all fields");
       return;
     }
     
@@ -84,24 +130,26 @@ const LoginPage = () => {
     
     // Form validation
     if (!registerData.name || !registerData.email || !registerData.password || !registerData.confirmPassword) {
-      toast.error("Veuillez remplir tous les champs");
+      toast.error(language === "fr" ? "Veuillez remplir tous les champs" : "Please fill in all fields");
       return;
     }
     
     if (registerData.password !== registerData.confirmPassword) {
-      toast.error("Les mots de passe ne correspondent pas");
+      toast.error(language === "fr" ? "Les mots de passe ne correspondent pas" : "Passwords do not match");
       return;
     }
     
     if (registerData.password.length < 6) {
-      toast.error("Le mot de passe doit contenir au moins 6 caractères");
+      toast.error(language === "fr" 
+        ? "Le mot de passe doit contenir au moins 6 caractères" 
+        : "Password must be at least 6 characters");
       return;
     }
     
     setIsLoading(true);
     
     try {
-      await register(registerData.name, registerData.email, registerData.password);
+      await registerUser(registerData.name, registerData.email, registerData.password);
       
       // Navigate to the route the user was trying to access, or to home
       const from = location.state?.from || '/';
@@ -123,27 +171,27 @@ const LoginPage = () => {
           <div className="max-w-md mx-auto">
             <Tabs defaultValue="login">
               <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="login">Connexion</TabsTrigger>
-                <TabsTrigger value="register">Inscription</TabsTrigger>
+                <TabsTrigger value="login">{t.login}</TabsTrigger>
+                <TabsTrigger value="register">{t.register}</TabsTrigger>
               </TabsList>
               
               <TabsContent value="login">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Connexion</CardTitle>
+                    <CardTitle>{t.loginTitle}</CardTitle>
                     <CardDescription>
-                      Connectez-vous à votre compte TechVista
+                      {t.loginDescription}
                     </CardDescription>
                   </CardHeader>
                   <form onSubmit={handleLogin}>
                     <CardContent className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email">{t.email}</Label>
                         <Input
                           id="email"
                           name="email"
                           type="email"
-                          placeholder="votre@email.com"
+                          placeholder={language === "fr" ? "votre@email.com" : "your@email.com"}
                           value={loginData.email}
                           onChange={handleLoginChange}
                           required
@@ -151,12 +199,12 @@ const LoginPage = () => {
                       </div>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <Label htmlFor="password">Mot de passe</Label>
+                          <Label htmlFor="password">{t.password}</Label>
                           <Link 
                             to="/forgot-password" 
                             className="text-sm text-primary hover:underline"
                           >
-                            Mot de passe oublié?
+                            {t.forgotPassword}
                           </Link>
                         </div>
                         <Input
@@ -171,9 +219,10 @@ const LoginPage = () => {
                       </div>
                       
                       <div className="text-sm text-gray-500 dark:text-gray-400">
-                        <p>Pour tester en tant qu'administrateur:</p>
-                        <p>Email: admin@techvista.com</p>
-                        <p>Mot de passe: admin123</p>
+                        <p>{t.adminTestTitle}</p>
+                        <p>{t.adminTestEmail}</p>
+                        <p>{t.adminTestPassword}</p>
+                        <p className="mt-1">{t.orUseAdmin}</p>
                       </div>
                     </CardContent>
                     <CardFooter>
@@ -185,10 +234,10 @@ const LoginPage = () => {
                         {isLoading ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Connexion en cours...
+                            {t.loggingIn}
                           </>
                         ) : (
-                          "Se connecter"
+                          t.loginButton
                         )}
                       </Button>
                     </CardFooter>
@@ -199,38 +248,38 @@ const LoginPage = () => {
               <TabsContent value="register">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Inscription</CardTitle>
+                    <CardTitle>{t.registerTitle}</CardTitle>
                     <CardDescription>
-                      Créez un compte pour commencer à faire vos achats
+                      {t.registerDescription}
                     </CardDescription>
                   </CardHeader>
                   <form onSubmit={handleRegister}>
                     <CardContent className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="register-name">Nom complet</Label>
+                        <Label htmlFor="register-name">{t.fullName}</Label>
                         <Input
                           id="register-name"
                           name="name"
-                          placeholder="Jean Dupont"
+                          placeholder={language === "fr" ? "Jean Dupont" : "John Doe"}
                           value={registerData.name}
                           onChange={handleRegisterChange}
                           required
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="register-email">Email</Label>
+                        <Label htmlFor="register-email">{t.email}</Label>
                         <Input
                           id="register-email"
                           name="email"
                           type="email"
-                          placeholder="votre@email.com"
+                          placeholder={language === "fr" ? "votre@email.com" : "your@email.com"}
                           value={registerData.email}
                           onChange={handleRegisterChange}
                           required
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="register-password">Mot de passe</Label>
+                        <Label htmlFor="register-password">{t.password}</Label>
                         <Input
                           id="register-password"
                           name="password"
@@ -242,7 +291,7 @@ const LoginPage = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="register-confirm-password">Confirmer le mot de passe</Label>
+                        <Label htmlFor="register-confirm-password">{t.confirmPassword}</Label>
                         <Input
                           id="register-confirm-password"
                           name="confirmPassword"
@@ -263,10 +312,10 @@ const LoginPage = () => {
                         {isLoading ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Inscription en cours...
+                            {t.registering}
                           </>
                         ) : (
-                          "S'inscrire"
+                          t.registerButton
                         )}
                       </Button>
                     </CardFooter>

@@ -19,6 +19,7 @@ import AIAssistantPage from "./pages/AIAssistantPage";
 import LoginPage from "./pages/LoginPage";
 import OrdersPage from "./pages/OrdersPage";
 import AdminPage from "./pages/AdminPage";
+import ContactPage from "./pages/ContactPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/orders" element={<OrdersPage />} />
                   <Route path="/admin" element={<AdminPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
