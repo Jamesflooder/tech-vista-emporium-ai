@@ -16,7 +16,8 @@ import {
   Laptop,
   Tablet,
   Headphones,
-  Home
+  Home,
+  ChevronDown
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -27,6 +28,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -52,25 +62,75 @@ const Navbar = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:ml-6 md:flex md:space-x-6">
+            <div className="hidden md:ml-6 md:flex md:items-center">
               <Link to="/" className="nav-link px-3 py-2 text-sm font-medium">
                 Accueil
               </Link>
-              <Link to="/products/smartphone" className="nav-link px-3 py-2 text-sm font-medium">
-                Smartphones
-              </Link>
-              <Link to="/products/laptop" className="nav-link px-3 py-2 text-sm font-medium">
-                Ordinateurs
-              </Link>
-              <Link to="/products/tablet" className="nav-link px-3 py-2 text-sm font-medium">
-                Tablettes
-              </Link>
-              <Link to="/products/accessory" className="nav-link px-3 py-2 text-sm font-medium">
-                Accessoires
-              </Link>
-              <Link to="/ai-assistant" className="nav-link px-3 py-2 text-sm font-medium">
-                IA Assistant
-              </Link>
+              
+              {/* Products Dropdown Menu */}
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>Produits</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid gap-3 p-4 w-[200px]">
+                        <li className="row-span-1">
+                          <NavigationMenuLink asChild>
+                            <Link
+                              to="/products/smartphone"
+                              className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-3 no-underline outline-none focus:shadow-md hover:bg-accent"
+                            >
+                              <div className="mb-2 flex items-center">
+                                <Smartphone className="mr-2 h-4 w-4" />
+                                <span className="text-sm font-medium">Smartphones</span>
+                              </div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li className="row-span-1">
+                          <NavigationMenuLink asChild>
+                            <Link
+                              to="/products/laptop"
+                              className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-3 no-underline outline-none focus:shadow-md hover:bg-accent"
+                            >
+                              <div className="mb-2 flex items-center">
+                                <Laptop className="mr-2 h-4 w-4" />
+                                <span className="text-sm font-medium">Ordinateurs</span>
+                              </div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li className="row-span-1">
+                          <NavigationMenuLink asChild>
+                            <Link
+                              to="/products/tablet"
+                              className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-3 no-underline outline-none focus:shadow-md hover:bg-accent"
+                            >
+                              <div className="mb-2 flex items-center">
+                                <Tablet className="mr-2 h-4 w-4" />
+                                <span className="text-sm font-medium">Tablettes</span>
+                              </div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li className="row-span-1">
+                          <NavigationMenuLink asChild>
+                            <Link
+                              to="/products/accessory"
+                              className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-3 no-underline outline-none focus:shadow-md hover:bg-accent"
+                            >
+                              <div className="mb-2 flex items-center">
+                                <Headphones className="mr-2 h-4 w-4" />
+                                <span className="text-sm font-medium">Accessoires</span>
+                              </div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
             </div>
           </div>
 
@@ -174,9 +234,6 @@ const Navbar = () => {
                       <Link to="/products/accessory" className="flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                         <Headphones className="mr-3 h-5 w-5" />
                         Accessoires
-                      </Link>
-                      <Link to="/ai-assistant" className="flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                        Assistance IA
                       </Link>
                     </nav>
                   </div>

@@ -9,6 +9,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
 import { ProductProvider } from "@/context/ProductContext";
 import { OrderProvider } from "@/context/OrderContext";
+import FloatingAssistantButton from "./components/FloatingAssistantButton";
 import Index from "./pages/Index";
 import ProductsPage from "./pages/ProductsPage";
 import ProductDetail from "./pages/ProductDetail";
@@ -52,6 +53,7 @@ const App = () => (
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
+                  <FloatingAssistantButton />
                 </BrowserRouter>
               </TooltipProvider>
             </OrderProvider>
