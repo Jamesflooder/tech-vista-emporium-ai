@@ -22,6 +22,7 @@ import LoginPage from "./pages/LoginPage";
 import OrdersPage from "./pages/OrdersPage";
 import AdminPage from "./pages/AdminPage";
 import ContactPage from "./pages/ContactPage";
+import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ const App = () => (
                     <Route path="/orders" element={<OrdersPage />} />
                     <Route path="/admin" element={<AdminPage />} />
                     <Route path="/contact" element={<ContactPage />} />
+                    <Route path="/about" element={<AboutPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                   <FloatingAssistantButton />

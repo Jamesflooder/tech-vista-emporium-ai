@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -17,7 +16,9 @@ import {
   Tablet,
   Headphones,
   Home,
-  ChevronDown
+  ChevronDown,
+  Info,
+  Mail
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -131,6 +132,16 @@ const Navbar = () => {
                   </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
+              
+              {/* About Link */}
+              <Link to="/about" className="nav-link px-3 py-2 text-sm font-medium">
+                À propos
+              </Link>
+              
+              {/* Contact Link */}
+              <Link to="/contact" className="nav-link px-3 py-2 text-sm font-medium">
+                Nous contacter
+              </Link>
             </div>
           </div>
 
@@ -234,6 +245,14 @@ const Navbar = () => {
                       <Link to="/products/accessory" className="flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                         <Headphones className="mr-3 h-5 w-5" />
                         Accessoires
+                      </Link>
+                      <Link to="/about" className="flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                        <Info className="mr-3 h-5 w-5" />
+                        À propos
+                      </Link>
+                      <Link to="/contact" className="flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                        <Mail className="mr-3 h-5 w-5" />
+                        Nous contacter
                       </Link>
                     </nav>
                   </div>

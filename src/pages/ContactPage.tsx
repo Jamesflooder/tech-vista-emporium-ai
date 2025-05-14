@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'sonner';
+import { toast } from '@/components/ui/use-toast';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -30,8 +30,6 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const ContactPage = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,24 +40,23 @@ const ContactPage = () => {
     },
   });
 
-  const onSubmit = async (data: FormValues) => {
-    setIsSubmitting(true);
+  const onSubmit = (data: FormValues) => {
+    // Create mailto URL with form data
+    const mailtoUrl = `mailto:kakudja0@gmail.com?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(
+      `De: ${data.name}\nEmail: ${data.email}\n\n${data.message}`
+    )}`;
     
-    try {
-      // Dans une application réelle, vous utiliseriez un backend pour envoyer un email
-      // Cette simulation simule un envoi d'email
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      console.log("Form data sent to kakudja0@gmail.com:", data);
-      
-      toast.success("Message envoyé avec succès! Nous vous répondrons bientôt.");
-      form.reset();
-    } catch (error) {
-      toast.error("Erreur lors de l'envoi du message. Veuillez réessayer.");
-      console.error("Form submission error:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Open the mailto URL in a new window
+    window.open(mailtoUrl, '_blank');
+    
+    // Show success toast
+    toast({
+      title: "Formulaire prêt à être envoyé",
+      description: "Votre client mail s'est ouvert avec votre message.",
+    });
+    
+    // Reset the form
+    form.reset();
   };
 
   return (
@@ -144,9 +141,7 @@ const ContactPage = () => {
                       )}
                     />
                     
-                    <Button type="submit" className="w-full" disabled={isSubmitting}>
-                      {isSubmitting ? "Envoi en cours..." : "Envoyer le message"}
-                    </Button>
+                    <Button type="submit" className="w-full">Envoyer le message</Button>
                   </form>
                 </Form>
               </CardContent>
